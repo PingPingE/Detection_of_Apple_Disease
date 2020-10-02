@@ -1,1 +1,1 @@
-# Detection_of_Apple_Disease
+# Detection_of_Apple_Diseases
