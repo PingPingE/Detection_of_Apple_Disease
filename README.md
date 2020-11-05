@@ -11,6 +11,9 @@
 - Vgg Image Annotator
 - Python 3.6.8
 - Weights & Biases(실험 관리 툴)
+- Django
+- Android Studio
+
 <br><br>
 ## 알고리즘
 - Mask R-CNN
