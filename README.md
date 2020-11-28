@@ -10,22 +10,21 @@
 - Keras 2.3.1
 - Vgg Image Annotator
 - Python 3.6.8
-- Weights & Biases(실험 관리 툴)
-- Django
+- Docker
+- 협업: Weights & Biases / Notion / Colab
+- 웹: Django
+- 안드로이드: Android studio
 
 <br><br>
 ## 알고리즘
 - Mask R-CNN
 <img src="https://miro.medium.com/max/1000/1*G5EsdDTv9-5kqK0hu9fIJw.png?w=640" width=50% height=50%/>
 
-<br><br>
-## 남은 일
-- 모델
-  - image augmentation
-  - 하이퍼파라미터 튜닝 계속 진행
-  - 모델 API개발
 
-- 웹
-  - 디자인 개선
-  
-- 서비스 네이밍
+## 역할
+- 데이터 수집, 가공
+- Mask R-CNN기반 모델 개발
+- 웹 개발
+
+
+## 결과
