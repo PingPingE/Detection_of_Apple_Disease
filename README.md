@@ -20,13 +20,13 @@
 - Mask R-CNN
 <img src="https://miro.medium.com/max/1000/1*G5EsdDTv9-5kqK0hu9fIJw.png?w=640" width=50% height=50%/>
 
-
+<br><br>
 ## 역할
 - 데이터 수집, 가공
 - Mask R-CNN기반 모델 개발
 - 웹 개발
 
-
+<br><br>
 ## 결과
 - 클릭 시 영상 재생
 [![main](https://user-images.githubusercontent.com/47843060/100495213-7a2ec500-318c-11eb-9835-31786c76e1a9.JPG)](https://drive.google.com/file/d/1VY796aO1YnD7Uuc9CdH8h6o7nz-wRmcv/view?usp=sharing)
