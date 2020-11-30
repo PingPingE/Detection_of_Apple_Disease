@@ -58,7 +58,7 @@
 
 ![image](https://user-images.githubusercontent.com/47843060/100582270-5609ea00-332c-11eb-9d6a-63d2eafa0d04.png)
 
-### mAP: 0.48
+### mAP: 0.48 (IoU threshold:0.5)
 
 
 <br><br>
