@@ -18,7 +18,10 @@
 <br><br>
 ## 알고리즘
 - Mask R-CNN
-<img src="https://miro.medium.com/max/1000/1*G5EsdDTv9-5kqK0hu9fIJw.png?w=640" width=50% height=50%/>
+![image](https://user-images.githubusercontent.com/47843060/100584284-3fb15d80-332f-11eb-97db-8e90238f6841.png)
+<br><br>
+![image](https://user-images.githubusercontent.com/47843060/100584885-0decc680-3330-11eb-8958-a3785462c7ed.png)
+
 
 <br><br>
 ## 역할
@@ -27,12 +30,36 @@
 - 웹 개발
 
 <br><br>
-## 결과
+## 학습 상세
+### 데이터
+- Train : 196개
+- Validation : 58개
+- 학습 class
+  - Sooty blotch: 그을음병
+  - Fly speck: 그을음점무늬병
+  - Marssonia blotch: 갈반병
+  - Bitter rot: 탄저병
+  - White rot: 겹무늬썩음병
+  - Brown rot: 잿빛무늬병
+  - Normal: 정상<br>
+ *Sooty와 Fly speck는 Sooty/Fly로 동시에 진단
 
+- 학습 하이퍼 파라미터
+  - Epoch: 96/300
+  - Batch_size: 1
+  - Backbone: ResNet 50(layers = heads)
+  - Detection_min_confidence: 0.9
+  - Learning_rate: 0.001->0.0001
+  - Optimizer: SGD
+
+
+<br><br>
+## 결과
 
 ![image](https://user-images.githubusercontent.com/47843060/100582270-5609ea00-332c-11eb-9d6a-63d2eafa0d04.png)
 
 ### mAP: 0.48
+
 
 <br><br>
 ## 웹
