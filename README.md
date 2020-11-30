@@ -1,5 +1,7 @@
 # Mask R-CNN 기반 사과 병해 진단 서비스 개발
 ![main](https://user-images.githubusercontent.com/47843060/100581940-ce23e000-332b-11eb-9efb-d31ae0c35b9a.JPG)
+<br><br>
+동영상: https://drive.google.com/file/d/1VY796aO1YnD7Uuc9CdH8h6o7nz-wRmcv/view?usp=sharing
 ## 개발 환경
 - OS: Ubuntu 18.04.5 LTS
 - GPU: GeForce GTX 1660
@@ -58,12 +60,12 @@
 
 ![image](https://user-images.githubusercontent.com/47843060/100582270-5609ea00-332c-11eb-9d6a-63d2eafa0d04.png)
 
-### mAP: 0.48 (IoU threshold:0.5)
+### mAP: 0.48 
+*IoU threshold:0.5
 
 
 <br><br>
 ## 웹
-동영상: https://drive.google.com/file/d/1VY796aO1YnD7Uuc9CdH8h6o7nz-wRmcv/view?usp=sharing
 
 <br><br>
 ### 메인
