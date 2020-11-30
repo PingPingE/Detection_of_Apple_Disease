@@ -66,8 +66,7 @@
 
 <br><br>
 ## 웹
-
-<br><br>
+<br>
 ### 메인
 <br><br>
 ![main](https://user-images.githubusercontent.com/47843060/100581940-ce23e000-332b-11eb-9efb-d31ae0c35b9a.JPG)
