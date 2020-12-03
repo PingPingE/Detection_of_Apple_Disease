@@ -16,6 +16,19 @@
 - Docker
 - 협업: Weights & Biases / Notion / Colab
 - 웹: Django
+- 안드로이드: Android studio
+
+<br><br>
+## 개발 기간
+- 2020.09 ~ 2020.11(2개월)
+
+<br><br>
+## 개발 인원 및 역할
+- 4명
+- 역할 분담
+  - 모바일 개발: 2명
+  - 웹 개발: 2명 
+  - 모델 개발: 4명
 
 <br><br>
 ## 알고리즘
