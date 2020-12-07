@@ -47,7 +47,7 @@
 <br><br>
 ## 학습 상세
 ### 데이터
-- Train : 196개
+- Train : 205개
 - Validation : 58개
 - 학습 class
   - Sooty blotch: 그을음병
