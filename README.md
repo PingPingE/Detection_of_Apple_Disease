@@ -2,6 +2,13 @@
 ![main](https://user-images.githubusercontent.com/47843060/100581940-ce23e000-332b-11eb-9efb-d31ae0c35b9a.JPG)
 <br><br>
 동영상: https://drive.google.com/file/d/1VY796aO1YnD7Uuc9CdH8h6o7nz-wRmcv/view?usp=sharing
+
+## 파일 정보
+- mrcnn 디렉토리: Mask R-CNN base code파일 포함
+- apple_wandb.py: custom 모델 정의 코드
+- concat_json.py: 각 병해 class의 json파일(어노테이션 정보)을 합치고 오류 검사를 위한 코드
+<br><br>
+
 ## 개발 환경
 - OS: Ubuntu 18.04.5 LTS
 - GPU: GeForce GTX 1660
