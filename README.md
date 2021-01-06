@@ -77,40 +77,45 @@
 
 <br><br>
 ## 결과
-
-![image](https://user-images.githubusercontent.com/47843060/100582270-5609ea00-332c-11eb-9d6a-63d2eafa0d04.png)
+Class | AP-50
+-- | --
+Bitter rot(탄저병) | 0.03
+Mar blotch(갈반병) | 0.05
+Normal(정상) | 0.78
+Sooty/Fly(그을음병) | 0.62
+White rot(겹무늬썩음병) | 0.73
+Brown rot(잿빛무늬병) | 0.70
 
 ### mAP: 0.48 
-*IoU threshold:0.5
-
+### IoU threshold: 0.5(50%)
 
 <br><br>
 ## 웹
 
-### 메인
+### [메인]
 <br><br>
 ![main](https://user-images.githubusercontent.com/47843060/100581940-ce23e000-332b-11eb-9efb-d31ae0c35b9a.JPG)
 <br><br><br>
 
-### 진단 결과
+### [진단 결과]
 <br><br>
 ![result](https://user-images.githubusercontent.com/47843060/100581890-bfd5c400-332b-11eb-8eee-be12be4713ea.JPG)
 <br><br><br>
 
 
-### 병해 정보
+### [병해 정보]
 <br><br>
 ![info](https://user-images.githubusercontent.com/47843060/100582448-95d0d180-332c-11eb-8b9e-0d43a8571628.JPG)
 <br><br><br>
 
 
-### 농약사 찾기
+### [농약사 찾기]
 <br><br>
 ![map](https://user-images.githubusercontent.com/47843060/100582385-80f43e00-332c-11eb-8288-e1d5c219513c.JPG)
 <br><br><br>
 
 
-### 농약 검색
+### [농약 검색]
 <br><br>
 ![search](https://user-images.githubusercontent.com/47843060/100582425-8f425a00-332c-11eb-9f2c-57072c7a3abf.JPG)
 <br><br><br>
