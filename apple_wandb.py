@@ -333,7 +333,7 @@ def detect_and_color_splash(model, image_path=None, video_path=None):
 
 
 ############################################################
-#  Training:
+#  Training
 ############################################################
 
 if __name__ == '__main__':
