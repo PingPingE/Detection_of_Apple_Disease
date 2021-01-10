@@ -1,8 +1,8 @@
 import tensorflow as tf
-import wandb
+import wandb #실험 관리 툴입니다.
 
-#Unknown: Failed to get convolution algorithm. This is probably because cuDNN failed to initialize, so try looking to see if a warning log message was printed above.
-#위 error 처리 코드
+# Unknown: Failed to get convolution algorithm. This is probably because cuDNN failed to initialize, so try looking to see if a warning log message was printed above.
+# 위 error 처리 코드
 gpus = tf.config.experimental.list_physical_devices("GPU")
 if gpus:
     try:
@@ -23,6 +23,7 @@ import numpy as np
 import skimage.draw
 import tensorflow as tf
 import keras
+
 # Root directory of the project
 ROOT_DIR = os.path.abspath("../../")
 
@@ -31,30 +32,35 @@ sys.path.append(ROOT_DIR)  # To find local version of the library
 from mrcnn.config import Config
 from mrcnn import model as modellib, utils
 
-# Path to trained weights file
+#Mask R-CNN으로 coco datatset을 학습한 모델의 가중치를 가져와 학습하였습니다.
 COCO_WEIGHTS_PATH = os.path.join(ROOT_DIR, "mask_rcnn_apple_coco.h5")
 
 # Directory to save logs and model checkpoints, if not provided
 # through the command line argument --logs
 DEFAULT_LOGS_DIR = os.path.join(ROOT_DIR, "logs")
 
-class_names =['Bitter rot','brown rot','Mar blotch','White rot', 'Normal','Sooty/Fly']
-class_dict = {class_:id_ for id_,class_ in enumerate(class_names,1)}
-#  Configurations
+#detection 대상 클래스입니다.
+class_names = ['Bitter rot', 'brown rot', 'Mar blotch', 'White rot', 'Normal', 'Sooty/Fly']
+class_dict = {class_: id_ for id_, class_ in enumerate(class_names, 1)}
+
+############################################################
+#  Configurations: 모델의 하이퍼파라미터 세부 조정
 ############################################################
 targets = {}
-cur_epochs = 500 #epoch 여기서 지정
-layer_stage = "heads"  # heads, 3+, 4+, 5+ 여기서 지정
-#Wandb
-# run = wandb.init(project=[project name],name=f"{datetime.datetime.now()}")
+cur_epochs = 500  # epoch 여기서 지정
+layer_stage = "heads"  #레이어 개수 선정: heads, 3+, 4+, 5+, all
+
+# Wandb: 실험 관리 툴입니다.
+#사전에 만들어놓은 wandb의 project에 해당 실험을 저장하기 위한 초기화작업입니다.
+run = wandb.init(project=[project name],name=f"{datetime.datetime.now()}")
 class AppleConfig(Config):
     """Configuration for training on the toy  dataset.
     Derives from the base Config class and overrides some values.
     """
-        # Give the configuration a recognizable name
-    NAME = "apple" 
+    # Give the configuration a recognizable name
+    NAME = "apple"
 
-    #Train on 1 GPU and 1 images per GPU. We can put multiple images on each
+    # Train on 1 GPU and 1 images per GPU. We can put multiple images on each
     # GPU. Batch size is (GPUs * images/GPU).
     GPU_COUNT = 1
     IMAGES_PER_GPU = 1
@@ -66,113 +72,106 @@ class AppleConfig(Config):
     STEPS_PER_EPOCH = 50
 
     # Skip detections with < 90% confidence
-    DETECTION_MIN_CONFIDENCE = 0.9 #default: 0.9
+    DETECTION_MIN_CONFIDENCE = 0.9  # default: 0.9
 
-    # set validation steps 
-    VALIDATION_STEPS = 58 #default: 50
+    # set validation steps
+    VALIDATION_STEPS = 58  # default: 50
 
     IMAGE_RESIZE_MODE = "square"
-    IMAGE_MIN_DIM = 512 #default:800
-    IMAGE_MAX_DIM = 1024 #default:1024
+    IMAGE_MIN_DIM = 512  # default:800
+    IMAGE_MAX_DIM = 1024  # default:1024
 
     IMAGE_MIN_SCALE = 0
 
-    RPN_ANCHOR_SCALES = (32, 64, 128, 256, 512) #default: (32, 64, 128, 256, 512)
+    RPN_ANCHOR_SCALES = (32, 64, 128, 256, 512)  # default: (32, 64, 128, 256, 512)
 
-    TRAIN_ROIS_PER_IMAGE = 200 #default: 200
+    TRAIN_ROIS_PER_IMAGE = 200  # default: 200
 
-    TRAIN_BN = False #default: False
+    TRAIN_BN = False  # default: False
 
-    RPN_NMS_THRESHOLD  = 0.7
+    RPN_NMS_THRESHOLD = 0.7
 
-    #Backbone (default=resnet101)
+    # Backbone (default=resnet101)
     BACKBONE = "resnet50"
 
-    #optimizer
+    # optimizer
     OPTIMIZER = 'SGD'
-    
-    #Learning rate
-    LEARNING_RATE = 0.001  
-    
-    WEIGHT_DECAY = 0.0001
-    
-    GRADIENT_CLIP_NORM = 5.0   # default: 5.0
 
-    FPN_CLASSIF_FC_LAYERS_SIZE = 1024 #default:1024
+    # Learning rate
+    LEARNING_RATE = 0.001
+
+    WEIGHT_DECAY = 0.0001
+
+    GRADIENT_CLIP_NORM = 5.0  # default: 5.0
+
+    FPN_CLASSIF_FC_LAYERS_SIZE = 1024  # default:1024
 
     PRE_NMS_LIMIT = 6000
 
     POST_NMS_ROIS_TRAINING = 2000
     POST_NMS_ROIS_INFERENCE = 1000
-    
+
     # If 1 then anchors are created for each cell in the backbone feature map.
     # If 2, then anchors are created for every other cell, and so on.
     RPN_ANCHOR_STRIDE = 1
-    
+
     # Percent of positive ROIs used to train classifier/mask heads
-    ROI_POSITIVE_RATIO = 0.33 #default:0.33
-    LEARNING_MOMENTUM = 0.9#default 0.9
+    ROI_POSITIVE_RATIO = 0.33  # default:0.33
+    LEARNING_MOMENTUM = 0.9  # default 0.9
 
-    #Wandb
-    # targets = {"OPTIMIZER": OPTIMIZER,
-    #            "LEARNING_RATE": LEARNING_RATE,
-    #            "RPN_NMS_THRESHOLD": RPN_NMS_THRESHOLD,
-    #            "BACKBONE": BACKBONE,
-    #            "TRAIN_ROIS_PER_IMAGE": TRAIN_ROIS_PER_IMAGE,
-    #            "TRAIN_BN": TRAIN_BN,
-    #            "IMAGE_MIN_DIM": IMAGE_MIN_DIM,
-    #            "IMAGE_MAX_DIM": IMAGE_MAX_DIM,
-    #            "VALIDATION_STEPS": VALIDATION_STEPS,
-    #            "STEPS_PER_EPOCH": STEPS_PER_EPOCH,
-    #            "DETECTION_MIN_CONFIDENCE": DETECTION_MIN_CONFIDENCE,
-    #            "ROI_POSITIVE_RATIO": ROI_POSITIVE_RATIO,
-    #            "WEIGHT_DECAY": WEIGHT_DECAY,
-    #            "IMAGE_RESIZE_MODE": IMAGE_RESIZE_MODE,
-    #            "LAYER_STAGE": layer_stage,
-    #            "EPOCHS": cur_epochs,"BATCH_SIZE":GPU_COUNT*IMAGES_PER_GPU,
-    #           "LEARNING_MOMENTUM": LEARNING_MOMENTUM,
-    #           "GRADIENT_CLIP_NORM":GRADIENT_CLIP_NORM}
-    # run.config.update(targets)
+    # Wandb -> 각 실험 모델의 변경사항을 비교할 하이퍼파라미터
+    targets = {"OPTIMIZER": OPTIMIZER,
+               "LEARNING_RATE": LEARNING_RATE,
+               "RPN_NMS_THRESHOLD": RPN_NMS_THRESHOLD,
+               "BACKBONE": BACKBONE,
+               "TRAIN_ROIS_PER_IMAGE": TRAIN_ROIS_PER_IMAGE,
+               "TRAIN_BN": TRAIN_BN,
+               "IMAGE_MIN_DIM": IMAGE_MIN_DIM,
+               "IMAGE_MAX_DIM": IMAGE_MAX_DIM,
+               "VALIDATION_STEPS": VALIDATION_STEPS,
+               "STEPS_PER_EPOCH": STEPS_PER_EPOCH,
+               "DETECTION_MIN_CONFIDENCE": DETECTION_MIN_CONFIDENCE,
+               "ROI_POSITIVE_RATIO": ROI_POSITIVE_RATIO,
+               "WEIGHT_DECAY": WEIGHT_DECAY,
+               "IMAGE_RESIZE_MODE": IMAGE_RESIZE_MODE,
+               "LAYER_STAGE": layer_stage,
+               "EPOCHS": cur_epochs,"BATCH_SIZE":GPU_COUNT*IMAGES_PER_GPU,
+              "LEARNING_MOMENTUM": LEARNING_MOMENTUM,
+              "GRADIENT_CLIP_NORM":GRADIENT_CLIP_NORM}
+    run.config.update(targets)
 
 
-#Wandb
-# class PerformanceCallback(keras.callbacks.Callback):
-#     def __init__(self, run):
-#         self.run = run
-#     def on_epoch_end(self, epoch, logs):
-#         print("Uploading metrics to wandb...")
-#         self.run.log(logs)
-    
+#wandb에 로그를 남기기 위한 callback함수입니다.
+class PerformanceCallback(keras.callbacks.Callback):
+    def __init__(self, run):
+        self.run = run
+    def on_epoch_end(self, epoch, logs):
+        print("Uploading metrics to wandb...")
+        self.run.log(logs)
+
 ############################################################
-#  Dataset
+#  Dataset: 데이터와 json파일(어노테이션 정보)을 로드합니다.
 ############################################################
 
 class AppleDataset(utils.Dataset):
 
     def load_apple(self, dataset_dir, subset):
-        """Load a subset of the Balloon dataset.
-        dataset_dir: Root directory of the dataset.
-        subset: Subset to load: train or val
-        """
         # Add classes. We have only one class to add.
 
-        for e,target in enumerate(class_names,1):
-            self.add_class("apple", e, target)#---변경
+        for e, target in enumerate(class_names, 1):
+            self.add_class("apple", e, target)  # ---변경
 
         # Train or validation dataset?
-        
-        assert subset in ['train','val']
+
+        assert subset in ['train', 'val']
         dataset_dir = os.path.join(dataset_dir, subset)
 
         # Load annotations
         annotations = json.load(open(os.path.join(dataset_dir, "via_region_data.json")))
-        annotations = list(annotations.values())  # don't need the dict keys
-
-        # The VIA tool saves images in the JSON even if they don't have any
-        # annotations. Skip unannotated images.
+        annotations = list(annotations.values())
         annotations = [a for a in annotations if a['regions']]
         # Add images
-        for e,a in enumerate(annotations):
+        for e, a in enumerate(annotations):
             # Get the x, y coordinaets of points of the polygons that make up
             # the outline of each object instance. These are stores in the
             # shape_attributes (see json format above)
@@ -186,32 +185,27 @@ class AppleDataset(utils.Dataset):
                 except:
                     print(objects)
                     continue
-                
+
             else:
                 polygons = [r['shape_attributes'] for r in a['regions']]
                 try:
                     objects = [s['region_attributes']['apple'] for s in a['regions']][0]
                 except:
                     continue
-            print(objects)
-            num_ids = [class_dict[name_] for name_ in objects]
-            # load_mask() needs the image size to convert polygons to masks.
-            # Unfortunately, VIA doesn't include it in JSON, so we must read
-            # the image. This is only managable since the dataset is tiny.
 
+            num_ids = [class_dict[name_] for name_ in objects]
             image_path = os.path.join(dataset_dir, a['filename'])
-            image = skimage.io.imread(image_path,plugin='matplotlib')
+            image = skimage.io.imread(image_path, plugin='matplotlib')
             height, width = image.shape[:2]
 
-#             print("num_ids: ",num_ids)
             self.add_image(
                 "apple",
-                image_id=a['filename'],  # use file name as a unique image id
+                image_id=a['filename'],
                 path=image_path,
                 width=width, height=height,
                 polygons=polygons,
-                num_ids = num_ids
-                )
+                num_ids=num_ids
+            )
 
     def load_mask(self, image_id):
         """Generate instance masks for an image.
@@ -220,17 +214,13 @@ class AppleDataset(utils.Dataset):
             one mask per instance.
         class_ids: a 1D array of class IDs of the instance masks.
         """
-        # If not a balloon dataset image, delegate to parent class.
         image_info = self.image_info[image_id]
         if image_info["source"] != "apple":
             return super(self.__class__, self).load_mask(image_id)
-        
+
         # Convert polygons to a bitmap mask of shape
-        # [height, width, instance_count]
         info = self.image_info[image_id]
         num_ids = info['num_ids']
-        # num_ids = info['num_ids']
-        # print(info['source'])
         mask = np.zeros([info["height"], info["width"], len(info["polygons"])],
                         dtype=np.uint8)
         for i, p in enumerate(info["polygons"]):
@@ -241,7 +231,6 @@ class AppleDataset(utils.Dataset):
         num_ids = np.array(num_ids, dtype=np.int32)
 
         return mask, num_ids
-      
 
     def image_reference(self, image_id):
         """Return the path of the image."""
@@ -255,7 +244,7 @@ class AppleDataset(utils.Dataset):
 def train(model):
     """Train the model."""
     # Training dataset.
-    dataset_train =AppleDataset()
+    dataset_train = AppleDataset()
     dataset_train.load_apple(args.dataset, "train")
     dataset_train.prepare()
 
@@ -263,23 +252,21 @@ def train(model):
     dataset_val = AppleDataset()
     dataset_val.load_apple(args.dataset, "val")
     dataset_val.prepare()
-    
-    #callback함수 추가
+
+    # callback함수 추가
     reduce_lr = keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.5,
                                                   patience=15, min_lr=0.0001)
-    #callbacks = [PerformanceCallback(run), reduce_lr]
-    callbacks=[reduce_lr]
-    
+    callbacks = [PerformanceCallback(run), reduce_lr]
+
     ap_config = AppleConfig()
     print("Training network heads")
-    model.train(dataset_train,dataset_val,
+    model.train(dataset_train, dataset_val,
                 learning_rate=ap_config.LEARNING_RATE,
                 epochs=cur_epochs,
-                layers=layer_stage,custom_callbacks = callbacks) #앞쪽레이어만 적용
+                layers=layer_stage, custom_callbacks=callbacks)  # 앞쪽레이어만 적용
 
 
 def color_splash(image, mask):
-
     # Make a grayscale copy of the image. The grayscale copy still
     # has 3 RGB channels, though.
     gray = skimage.color.gray2rgb(skimage.color.rgb2gray(image)) * 255
@@ -346,7 +333,7 @@ def detect_and_color_splash(model, image_path=None, video_path=None):
 
 
 ############################################################
-#  Training
+#  Training:
 ############################################################
 
 if __name__ == '__main__':
@@ -380,8 +367,8 @@ if __name__ == '__main__':
     if args.command == "train":
         assert args.dataset, "Argument --dataset is required for training"
     elif args.command == "splash":
-        assert args.image or args.video,\
-               "Provide --image or --video to apply color splash"
+        assert args.image or args.video, \
+            "Provide --image or --video to apply color splash"
 
     print("Weights: ", args.weights)
     print("Dataset: ", args.dataset)
@@ -396,6 +383,8 @@ if __name__ == '__main__':
             # one image at a time. Batch size = GPU_COUNT * IMAGES_PER_GPU
             GPU_COUNT = 1
             IMAGES_PER_GPU = 1
+
+
         config = InferenceConfig()
     config.display()
 
