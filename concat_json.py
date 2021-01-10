@@ -2,9 +2,9 @@ import json
 def concat_json(type='train'): #type-> val or train (default: train)
         print("-------",type,"--------")
         if type =='val':
-                file = open(f'{type}/Bitter_rot_and_Viroid_val.json')
+                file = open(f'{type}/Bitter_rot_val.json')
         else:
-                file = open(f'{type}/Bitter_rot_and_Viroid.json')
+                file = open(f'{type}/Bitter_rot.json')
         json_data = json.load(file)
         for target in ['scab', 'white_rot','sooty_blotch','flyspeck','Bitter pit','Brown rot']:
                 if type =='val':
@@ -26,9 +26,9 @@ def concat_json(type='train'): #type-> val or train (default: train)
                 try:
                         for kk in json_data_[k]['regions'][0]['region_attributes']['apple'].keys():
                                 counter[kk] += 1
-                except:
+                except: #형식에 맞지 않는 경우 error
                         print(k)
                         print(json_data_[k]['regions'])
 
-        print(counter)
+        print(counter) #각 class 개수 print
 concat_json()
