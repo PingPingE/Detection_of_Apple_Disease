@@ -1,27 +1,11 @@
 import tensorflow as tf
 import wandb #실험 관리 툴입니다.
-
-# Unknown: Failed to get convolution algorithm. This is probably because cuDNN failed to initialize, so try looking to see if a warning log message was printed above.
-# 위 error 처리 코드
-gpus = tf.config.experimental.list_physical_devices("GPU")
-if gpus:
-    try:
-        # Currently, memory growth needs to be the same across GPUs
-        for gpu in gpus:
-            tf.config.experimental.set_memory_growth(gpu, True)
-        logical_gpus = tf.config.experimental.list_logical_devices("GPU")
-        print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPUs")
-    except RuntimeError as e:
-        # Memory growth must be set before GPUs have been initialized
-        print(e)
-
 import os
 import sys
 import json
 import datetime
 import numpy as np
 import skimage.draw
-import tensorflow as tf
 import keras
 
 # Root directory of the project
