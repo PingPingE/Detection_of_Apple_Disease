@@ -163,7 +163,6 @@ class AppleDataset(utils.Dataset):
             num_ids = []
             if type(a['regions']) is dict:
                 polygons = [r['shape_attributes'] for r in a['regions'].values()]
-                # print("regions:",a['regions']), augmentation = augmentation
                 try:
                     objects = [s['region_attributes']['apple'] for s in a['regions'].values()]
                 except:
@@ -243,11 +242,10 @@ def train(model):
     callbacks = [PerformanceCallback(run), reduce_lr]
 
     ap_config = AppleConfig()
-    print("Training network heads")
     model.train(dataset_train, dataset_val,
                 learning_rate=ap_config.LEARNING_RATE,
                 epochs=cur_epochs,
-                layers=layer_stage, custom_callbacks=callbacks)  # 앞쪽레이어만 적용
+                layers=layer_stage, custom_callbacks=callbacks)
 
 
 def color_splash(image, mask):
