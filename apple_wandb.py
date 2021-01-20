@@ -50,7 +50,7 @@ class AppleConfig(Config):
     IMAGES_PER_GPU = 1
 
     # Number of classes (including background)
-    NUM_CLASSES = len(class_names) + 1  # Background + balloon
+    NUM_CLASSES = len(class_names) + 1  # + Background
 
     # Number of training steps per epoch
     STEPS_PER_EPOCH = 50
